@@ -3,9 +3,12 @@ package com.marcoarturo.smstest
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Build
 import android.telephony.SmsMessage
+import android.telephony.SmsManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import okhttp3.*
 import java.io.IOException
 
@@ -33,9 +36,6 @@ class SmsReceiver : BroadcastReceiver() {
                 val messageText = smsMessage.messageBody.toString()
 
 
-                //val url = "67.205.146.198:8085/gis/app/notificaciones"
-                //val resp = firefly.httpClient().get("$url?celular=$phoneNumber&body=$messageText").asyncSubmit()
-                //val stat = resp.status
                 Toast.makeText(
                     context,
                     "phoneNumber: $phoneNumber\n" +
@@ -44,8 +44,20 @@ class SmsReceiver : BroadcastReceiver() {
                 ).show()
 
                 //-------------------------------------------
+                //------- Conección con el seervicio --------
 
-                run("http://67.205.146.198:8085/gis/app/notificaciones?celular=$phoneNumber&body=$messageText")
+                run("http://67.205.146.198:8085/chasqui/ap  p/notificaciones?celular=$phoneNumber&body=$messageText")
+
+
+                //-------------------------------------------
+                //----- Envío de respuesta ------------------
+
+
+                val smsManager = SmsManager.getDefault() as SmsManager
+                smsManager.sendTextMessage(phoneNumber, null, "DO BABES", null, null)
+
+                //phoneNumber.sendSMS()
+
 
             }
         }
@@ -60,4 +72,9 @@ class SmsReceiver : BroadcastReceiver() {
             override fun onResponse(call: Call, response: Response) = println(response.body()?.string())
         })
     }
+
+
+
+
+
 }

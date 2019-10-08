@@ -11,18 +11,28 @@ import java.io.IOException
 class MainActivity : AppCompatActivity() {
 
     private val requestReceiveSms = 2
-
+    private val requestSendSms = 2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         if (ActivityCompat.checkSelfPermission( this, Manifest.permission.RECEIVE_SMS)
-        != PackageManager.PERMISSION_GRANTED){
+            != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.RECEIVE_SMS),
+                requestReceiveSms
+            )
+        }
+
+        if (ActivityCompat.checkSelfPermission( this, Manifest.permission.SEND_SMS)
+            != PackageManager.PERMISSION_GRANTED){
 
             ActivityCompat.requestPermissions(this,
-                arrayOf(Manifest.permission.RECEIVE_SMS),
-                requestReceiveSms)
+                arrayOf(Manifest.permission.SEND_SMS),
+                requestSendSms)
 
         }
 
