@@ -10,11 +10,13 @@ import android.telephony.SmsManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import okhttp3.*
+import org.json.JSONObject
 import java.io.IOException
 
 class SmsReceiver : BroadcastReceiver() {
 
     private val client = OkHttpClient()
+
 
     override fun onReceive(context: Context, intent: Intent) {
 
@@ -46,15 +48,14 @@ class SmsReceiver : BroadcastReceiver() {
                 //-------------------------------------------
                 //------- Conección con el seervicio --------
 
-                run("http://67.205.146.198:8085/chasqui/ap  p/notificaciones?celular=$phoneNumber&body=$messageText")
-
+                //var jsoncito = ""
+                run("http://67.205.146.198:8085/chasqui/app/notificaciones?celular=$phoneNumber&body=$messageText")
 
                 //-------------------------------------------
                 //----- Envío de respuesta ------------------
 
 
-                val smsManager = SmsManager.getDefault() as SmsManager
-                smsManager.sendTextMessage(phoneNumber, null, "DO BABES", null, null)
+
 
                 //phoneNumber.sendSMS()
 
@@ -69,8 +70,15 @@ class SmsReceiver : BroadcastReceiver() {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {}
-            override fun onResponse(call: Call, response: Response) = println(response.body()?.string())
+            override fun onResponse(call: Call, response: Response) = enviarMensaje(response.body()?.string() + "")
         })
+ ///       return response.body()?.string()
+    }
+
+    fun enviarMensaje(json:String) {
+        println("porno!!!!" + json)
+        val smsManager = SmsManager.getDefault() as SmsManager
+        smsManager.sendTextMessage("+51954886674", null, json.substring(1,50), null, null)
     }
 
 
